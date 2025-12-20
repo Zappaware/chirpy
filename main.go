@@ -8,11 +8,12 @@ import (
 func main() {
 	mux := http.NewServeMux()
 
-	// Serve files from the current directory
-	fileServer := http.FileServer(http.Dir("."))
+	// Serve static assets
+	assets := http.FileServer(http.Dir("./assets"))
+	mux.Handle("/assets/", http.StripPrefix("/assets/", assets))
 
-	// Handle the root path
-	mux.Handle("/", fileServer)
+	// Serve index.html (optional, if you already have this)
+	mux.Handle("/", http.FileServer(http.Dir(".")))
 
 	server := &http.Server{
 		Addr:    ":8080",
