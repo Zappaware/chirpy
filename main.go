@@ -22,7 +22,9 @@ func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	hits := cfg.fileserverHits.Load()
-	fmt.Fprintf(w, "Hits: %d", hits)
+	if _, err := fmt.Fprintf(w, "Hits: %d", hits); err != nil {
+		log.Printf("Error writing response: %v", err)
+	}
 }
 
 func (cfg *apiConfig) handlerReset(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +35,9 @@ func (cfg *apiConfig) handlerReset(w http.ResponseWriter, r *http.Request) {
 func readinessHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "OK")
+	if _, err := fmt.Fprint(w, "OK"); err != nil {
+		log.Printf("Error writing response: %v", err)
+	}
 }
 
 func main() {
