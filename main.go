@@ -45,7 +45,7 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/healthz", readinessHandler)
+	mux.HandleFunc("GET /api/healthz", readinessHandler)
 
 	fs := http.FileServer(http.Dir("."))
 	handler := http.StripPrefix("/app", fs)
@@ -55,8 +55,8 @@ func main() {
 	assets := http.FileServer(http.Dir("./assets"))
 	mux.Handle("/assets/", http.StripPrefix("/assets/", assets))
 
-	mux.HandleFunc("/metrics", apiCfg.handlerMetrics)
-	mux.HandleFunc("/reset", apiCfg.handlerReset)
+	mux.HandleFunc("GET /api/metrics", apiCfg.handlerMetrics)
+	mux.HandleFunc("POST /api/reset", apiCfg.handlerReset)
 
 	server := &http.Server{
 		Addr:    ":8080",
